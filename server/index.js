@@ -10,11 +10,18 @@ const app = express(); //manejador de rutas http
 const server = createServer(app); //el servidor http real, si hay peticion la manda a express para que la maneje
 const io = new Server(server); //convierte el protocolo http a la conexion websocket despues del handshake
 
+//responde a la accion cuando un usuario se ha conectado
 io.on('connection', (socket) => {
     console.log('a user has connected!!');
     
+    //responde a la accion cuando un usuario se ha desconectado
     socket.on('disconnect', () => {
         console.log('an user has disconnected');
+    });
+
+    //responde a la accion cuando un usuario envia un mensaje
+    socket.on('chat message', (msg) => {
+        console.log('message: ' + msg)
     });
 });
 
