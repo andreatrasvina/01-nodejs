@@ -38,9 +38,22 @@ io.on('connection', (socket) => {
     });
 
     //responde a la accion cuando un usuario envia un mensaje
-    socket.on('chat message', (msg) => {
+    socket.on('chat message', async (msg) => {
+
+        let result
+
+        try {
+            result = await db.execute({
+                sql: 'INSERT INTO messages (content) VALUES (:msg)',
+                args: { msg }
+            });
+        } catch (e) {
+            console.error(e);
+            return;
+        }
+        
         console.log('message: ' + msg); //para verlos aki cerquita jeje
-        io.emit('chat message', msg);
+        io.emit('chat message', msg, result.lastInsertRowid.toString());
     });
 });
 
